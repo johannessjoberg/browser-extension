@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // @ts-ignore
 import { remoteFunction } from 'webextension-rpc';
 import { markConsentRequestsAsAnswered } from "../common/consent-request-management";
+import {dispatchEventThing} from "../content/events"
 
 async function main() {
   const searchParams = new URL(document.URL).searchParams;
@@ -27,17 +28,12 @@ async function main() {
   }
 
   async function close() {
+    console.log('close')
     // When explicitly closed, consider unchecked boxes as rejected.
     if (webPageOrigin)
       await markConsentRequestsAsAnswered(webPageOrigin);
 
-    console.log('webPageOrigin', webPageOrigin)
-
-    const response = await fetch('http://localhost:8080/v2/twins/anton/age');
-    const json = await response.json();
-    await browser.storage.sync.set({
-      'data:proxy': { proxy: json },
-    });
+    await dispatchEventThing(document)
 
     window.close(); // For pop-up
     remoteFunction('hidePopin')(); // For pop-in

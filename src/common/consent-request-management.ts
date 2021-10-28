@@ -55,7 +55,6 @@ export async function markConsentRequestsAsAnswered(webPageOrigin: string) {
     }
   }
   await setStorageDataForOrigin(webPageOrigin, storageData);
-  console.log('anton:', await getStorageDataForOrigin(webPageOrigin))
 }
 
 export async function setAllResponsesForWebsite(webPageOrigin: string, consent: boolean) {
@@ -93,8 +92,6 @@ export async function getUserDecisions(webPageOrigin: string): Promise<UserDecis
 export function storageDataToUserDecisions(storageData: StorageData): UserDecisionsObject {
   const userDecisions: UserDecisionsObject = {};
 
-  console.log('storageData', storageData)
-
   if (storageData.consentResponses) {
     // Get the identifiers of requests that were consented to, and are still applicable.
     const consent = Object.entries(storageData.consentResponses)
@@ -122,7 +119,6 @@ export function listenToStorageChanges(
       if (areaName !== 'sync') return;
 
       Object.entries(changes).forEach(([key, change]) => {
-        console.log('change', change)
         if (!key.startsWith('data:')) return;
         const webPageOrigin = key.slice('data:'.length);
         const newStorageData = makeStorageData(change.newValue);
@@ -135,7 +131,6 @@ export function listenToStorageChanges(
 
 export async function getAllOrigins() {
   const storageContents = await browser.storage.sync.get();
-  console.log('storageContents', storageContents)
   const allOrigins = Object.keys(storageContents)
     .filter(key => key.startsWith('data:'))
     .map(key => key.slice('data:'.length));

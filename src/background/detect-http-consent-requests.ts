@@ -8,10 +8,8 @@ type OnWebRequestCompletedDetails =
   & { responseHeaders: browser.webRequest.HttpHeaders };
 
 async function getConsentRequestsResource(resourceUrl: string): Promise<ConsentRequestsResource> {
-  console.log('resourceUrl', resourceUrl)
   const response = await fetch(resourceUrl);
   const json = await response.text();
-  console.log('json', json)
   const resourceObj = JSON.parse(json) as ConsentRequestsResource;
   validateConsentRequestsResource(resourceObj);
   return resourceObj;
