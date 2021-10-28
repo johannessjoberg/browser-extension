@@ -27,6 +27,7 @@ const pageScriptContent = `
         'decisionchange',
         proxyEvent.detail,
       );
+      console.log('event', proxyEvent);
       globalThis.window.navigator.dataProtectionControl.dispatchEvent(adpcEvent);
     })
   }
@@ -34,19 +35,25 @@ const pageScriptContent = `
 executePageScript(pageScriptContent);
 
 listenToStorageChanges((webPageOrigin, newStorageData, oldStorageData) => {
-  if (webPageOrigin !== new URL(document.URL).origin) return;
-
+  // console.log('webPageOrigin', webPageOrigin)
+  // if (webPageOrigin !== new URL(document.URL).origin) return;
   const newUserDecisions = storageDataToUserDecisions(newStorageData);
   const oldUserDecisions = storageDataToUserDecisions(oldStorageData);
-  if (deepEqual(newUserDecisions, oldUserDecisions)) return;
+  // if (deepEqual(newUserDecisions, oldUserDecisions)) return;
 
   const eventAttributes = {
     userDecisions: newUserDecisions,
   };
 
-  const proxyEvent = new CustomEvent(
+  let proxyEvent = new CustomEvent(
     proxyEventName,
     maybeClone({ detail: eventAttributes }),
   );
+  if (webPageOrigin === 'proxy') {
+    proxyEvent = new CustomEvent(
+      proxyEventName,
+      maybeClone({ detail: newStorageData }),
+    );
+  }
   document.dispatchEvent(proxyEvent);
 });

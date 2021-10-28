@@ -12,7 +12,7 @@
   );
 
   const userPreferences = maybeUserPreferences as Writable<UserPreferences>;
-  console.log(maybeUserPreferences)
+  console.log('maybeUserPreferences', maybeUserPreferences)
 </script>
 
 {#if $maybeUserPreferences}

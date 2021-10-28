@@ -30,6 +30,15 @@ async function main() {
     // When explicitly closed, consider unchecked boxes as rejected.
     if (webPageOrigin)
       await markConsentRequestsAsAnswered(webPageOrigin);
+
+    console.log('webPageOrigin', webPageOrigin)
+
+    const response = await fetch('http://localhost:8080/v2/twins/anton/age');
+    const json = await response.json();
+    await browser.storage.sync.set({
+      'data:proxy': { proxy: json },
+    });
+
     window.close(); // For pop-up
     remoteFunction('hidePopin')(); // For pop-in
   }
