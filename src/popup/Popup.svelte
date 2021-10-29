@@ -2,11 +2,15 @@
   import { Button } from 'sveltestrap';
   import { getDomain } from 'tldts';
   import ConsentRequestsLoader from "./ConsentRequestsLoader.svelte";
+  import SaveSelection from './SaveSelection.svelte';
   import ConsentRequestsListContent from "./ConsentRequestsListContent.svelte";
   import AcceptRejectAllButtons from "./AcceptRejectAllButtons.svelte";
+import type { Writable } from 'svelte/store';
+import type { StorageData } from "../common/consent-request-management";
 
   export let close: () => void;
   export let webPageOrigin: string | undefined;
+
 
   function openOptionsPage() {
     // browser.runtime.openOptionsPage();
@@ -17,8 +21,11 @@
 
 <main class="py-2 flex-grow-1 d-flex flex-column">
   <!-- <button on:click={close} class="btn-close small mx-2 mb-2 float-end" aria-label="Close"></button> -->
+
   {#if webPageOrigin}
+
     <ConsentRequestsLoader webPageOrigin={webPageOrigin} let:storageData>
+
       <section class="container clearfix">
         <AcceptRejectAllButtons {storageData} classes="float-end ms-2 mt-2 mb-1" />
         <p>{getDomain(webPageOrigin ?? '') ?? 'This website'} asks your consent for the following:</p>
@@ -40,4 +47,5 @@
       Confirm choices
     </Button>
   </section>
+
 </main>
