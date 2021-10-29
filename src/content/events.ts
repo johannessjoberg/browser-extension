@@ -81,42 +81,35 @@ export async function request(consentRequestsList: ConsentRequestsList, origin?:
   return userDecisions;
 }
 
-listenToStorageChanges((webPageOrigin, newStorageData, oldStorageData) => {
+listenToStorageChanges((webPageOrigin, newStorageData) => {
+  console.log('listenToStorageChanges webPageOrigin', webPageOrigin)
   // console.log('webPageOrigin', webPageOrigin)
   // if (webPageOrigin !== new URL(document.URL).origin) return;
+  // @ts-ignore
   const newUserDecisions = storageDataToUserDecisions(newStorageData);
-  const oldUserDecisions = storageDataToUserDecisions(oldStorageData);
+  // const oldUserDecisions = storageDataToUserDecisions(oldStorageData);
   // if (deepEqual(newUserDecisions, oldUserDecisions)) return;
 
+  console.log('newStorageData', newStorageData)
+  // console.log('oldStorageData', oldStorageData)
   const eventAttributes = {
     userDecisions: newUserDecisions,
   };
 
   let proxyEvent = new CustomEvent(
     proxyEventName,
-    maybeClone({ detail: eventAttributes }),
+    maybeClone({ detail: {
+      ...eventAttributes,
+        ...(eventAttributes?.userDecisions?.consent?.includes('proxy:age') && { proxy: newStorageData.proxy })}
+    }),
   );
-  if (webPageOrigin === 'proxy') {
-    proxyEvent = new CustomEvent(
-      proxyEventName,
-      maybeClone({ detail: newStorageData }),
-    );
-  }
+  // if (webPageOrigin === 'proxy') {
+  //   proxyEvent = new CustomEvent(
+  //     proxyEventName,
+  //     maybeClone({ detail: newStorageData }),
+  //   );
+  // }
+  console.log('before dispatch', proxyEvent)
   document.dispatchEvent(proxyEvent);
+  console.log('after dispatch')
 });
-
-export async function dispatchEventThing (document: any) {
-  console.log('dispatchEventThing')
-  const data = await request([{ id: 'proxy:age', text: 'tjoho' }], 'http://localhost:3000')
-  console.log('dispatchEventThing data', data)
-
-  let proxyEvent = new CustomEvent(
-    proxyEventName,
-    maybeClone({ detail: data }),
-  );
-  console.log('dispatchEventThing before', proxyEvent)
-  document.dispatchEvent(proxyEvent);
-  console.log('dispatchEventThing after')
-}
-
-

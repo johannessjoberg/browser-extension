@@ -2,7 +2,6 @@
   import { Button } from 'sveltestrap';
   import { getDomain } from 'tldts';
   import ConsentRequestsLoader from "./ConsentRequestsLoader.svelte";
-  import SaveSelection from './SaveSelection.svelte';
   import ConsentRequestsListContent from "./ConsentRequestsListContent.svelte";
   import AcceptRejectAllButtons from "./AcceptRejectAllButtons.svelte";
 import type { Writable } from 'svelte/store';

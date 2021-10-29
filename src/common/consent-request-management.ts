@@ -5,11 +5,12 @@ export interface StorageData {
   consentResponses: ConsentResponses;
 }
 
-export function makeStorageData(partialData?: Partial<StorageData>): StorageData {
+export function makeStorageData(partialData?: Partial<StorageData>, proxyData?: Record<string,any>): StorageData {
   const data = {
     consentRequestsList: [],
     consentResponses: {},
     ...partialData,
+    ...proxyData,
   };
   return data;
 }
@@ -112,18 +113,20 @@ export function storageDataToUserDecisions(storageData: StorageData): UserDecisi
 }
 
 export function listenToStorageChanges(
-  callback: (webPageOrigin: string, newValue: StorageData, oldValue: StorageData) => void,
+  callback: (webPageOrigin: string, newValue: Record<string, any>) => void,
 ) {
   browser.storage.onChanged.addListener(
-    (changes, areaName) => {
+    async (changes, areaName) => {
       if (areaName !== 'sync') return;
 
-      Object.entries(changes).forEach(([key, change]) => {
+      const data = await browser.storage.sync.get()
+
+      Object.entries(data).forEach(([key, value]) => {
         if (!key.startsWith('data:')) return;
+        if (key.startsWith('data:proxy')) return;
         const webPageOrigin = key.slice('data:'.length);
-        const newStorageData = makeStorageData(change.newValue);
-        const oldStorageData = makeStorageData(change.oldValue);
-        callback(webPageOrigin, newStorageData, oldStorageData);
+        const newStorageData = makeStorageData(value, data['data:proxy']);
+        callback(webPageOrigin, newStorageData);
       });
     }
   );

@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // @ts-ignore
 import { remoteFunction } from 'webextension-rpc';
 import { markConsentRequestsAsAnswered } from "../common/consent-request-management";
-import {dispatchEventThing} from "../content/events"
 
 async function main() {
   const searchParams = new URL(document.URL).searchParams;
@@ -32,8 +31,6 @@ async function main() {
     // When explicitly closed, consider unchecked boxes as rejected.
     if (webPageOrigin)
       await markConsentRequestsAsAnswered(webPageOrigin);
-
-    await dispatchEventThing(document)
 
     window.close(); // For pop-up
     remoteFunction('hidePopin')(); // For pop-in
