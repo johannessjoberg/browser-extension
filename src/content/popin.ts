@@ -1,7 +1,7 @@
 // @ts-ignore
 import { makeRemotelyCallable } from 'webextension-rpc';
 
-const fadeOutDuration = 300; // ms
+const fadeOutDuration = 1000; // ms
 const popupUrl = browser.runtime.getURL('/popup/index.html');
 
 export async function showPopin() {

@@ -5,40 +5,13 @@
   import type { ConsentRequest } from '../types';
 
   export let storageData: Writable<StorageData>;
-
-    function onSubmit(e:any) {
-    console.log('storageData',$storageData)
-
-    const formData = new FormData(e.target);
-    console.log('formdata', formData)
-    const data = {};
-    for (let a of formData) {
-      console.log('a',a)
-    }
-    // console.log($storageData.consentResponses)
-    Object.keys($storageData.consentResponses).forEach((key) => {
-      $storageData.consentResponses[key] = undefined
-    })
-    for (let field of formData) {
-      console.log(field)
-      let key: string
-      let value: any
-      [key, value] = field;
-      //@ts-ignore
-      data[key] = value;
-      $storageData.consentResponses[key] = value == "on"
-    }
-
-    //   console.log('data', data)
-    }
-    // bind:checked={}
+  export let onSubmit: (e: any, storageData: any) => {}
 
   function isUnanswered(consentRequest: ConsentRequest) {
     return $storageData.consentResponses[consentRequest.id] === undefined;
   }
 </script>
 
-<form on:submit|preventDefault={(e) => onSubmit(e)}>
 <ListGroup>
   {#each $storageData.consentRequestsList as consentRequest (consentRequest.id)}
     <ListGroupItem
@@ -69,5 +42,3 @@
     </p>
   {/each}
 </ListGroup>
-<button type="submit">Save settings</button>
-</form>

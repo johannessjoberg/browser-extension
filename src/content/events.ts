@@ -72,8 +72,8 @@ export async function request(consentRequestsList: ConsentRequestsList, origin?:
     data: {}
   };
 
-  await getData('/anton/age')
-  await getData('/anton/clown/certification')
+  await getData('/henrik/age')
+  await getData('/henrik/clown/certification')
 
   return userDecisions;
 }

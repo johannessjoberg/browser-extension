@@ -18,6 +18,6 @@
 </script>
 
 <ButtonGroup class={classes}>
-  <Button on:click={() => respondAll(false)} disabled={zeroRequests} outline size="sm" color="primary" class="flex-grow-0">Reject all</Button>
-  <Button on:click={() => respondAll(true)} disabled={zeroRequests} outline size="sm" color="primary" class="flex-grow-0">Accept all</Button>
+  <Button on:click={() => respondAll(false)} disabled={zeroRequests} outline size="sm" color="danger" class="flex-grow-0">Reject all</Button>
+  <Button on:click={() => respondAll(true)} disabled={zeroRequests} outline size="sm" color="success" class="flex-grow-0">Accept all</Button>
 </ButtonGroup>

@@ -1,11 +1,7 @@
 <script lang="ts">
   import { Button } from 'sveltestrap';
-  import { getDomain } from 'tldts';
   import ConsentRequestsLoader from "./ConsentRequestsLoader.svelte";
-  import ConsentRequestsListContent from "./ConsentRequestsListContent.svelte";
-  import AcceptRejectAllButtons from "./AcceptRejectAllButtons.svelte";
-import type { Writable } from 'svelte/store';
-import type { StorageData } from "../common/consent-request-management";
+  import SvelteIsWeird from "./SvelteIsWeird.svelte";
 
   export let close: () => void;
   export let webPageOrigin: string | undefined;
@@ -18,33 +14,75 @@ import type { StorageData } from "../common/consent-request-management";
   }
 </script>
 
-<main class="py-2 flex-grow-1 d-flex flex-column">
+<style>
+  @font-face {
+    font-family: 'GT-Eesti-Pro-Display';
+    font-style: normal;
+    font-weight: 400;
+    src: local('GT-Eesti-Pro-Display'), local('Gelasio-Regular'), url(https://www.proxy.com/static/gt-eesti-pro-display-regular-e9820bc13314a888d0d6a08716aafc80.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  .main {
+    font-family: 'GT-Eesti-Pro-Display';
+    font-style: normal;
+    font-weight: 200;
+  }
+
+  .avatar-img {
+    border-radius: 50%;
+    height: 42px;
+    width: 42px;
+    -o-object-fit: cover;
+    object-fit: cover;
+  }
+
+  .avatar-figure {
+    margin: 6px 0px 12px 12px;
+    padding: 0 0 12px 0;
+    color: #5c5856;
+    display: flex;
+  }
+
+  .avatar-figcaption {
+    margin: 0 0 0 12px;
+    text-align: left;
+  }
+
+  .avatar-span {
+    display: block;
+    font-size: 14px;
+  }
+
+  .settings {
+    margin-right: 12px;
+    /*padding: 6px;*/
+    margin-left: auto !important;
+    font-size: 20px;
+  }
+</style>
+
+<main class="main py-2 flex-grow-1 d-flex flex-column">
   <!-- <button on:click={close} class="btn-close small mx-2 mb-2 float-end" aria-label="Close"></button> -->
-
   {#if webPageOrigin}
-
     <ConsentRequestsLoader webPageOrigin={webPageOrigin} let:storageData>
+        <figure class="avatar-figure border-bottom">
+          <img class="avatar-img" src="https://ca.slack-edge.com/T03D4RYLN-UBXEC6MJ6-27fdd6ac0796-512" alt="Henrik">
+          <figcaption class="avatar-figcaption">
+          <span class="avatar-span">Henrik</span>
+          <span class="avatar-span">hussfelt@proxy.com</span>
 
-      <section class="container clearfix">
-        <AcceptRejectAllButtons {storageData} classes="float-end ms-2 mt-2 mb-1" />
-        <p>{getDomain(webPageOrigin ?? '') ?? 'This website'} asks your consent for the following:</p>
-      </section>
-      <section class="container flex-grow-1 d-flex flex-column">
-        <div style="height: 200px; overflow-y: auto;" class="border-top border-bottom flex-grow-1">
-          <ConsentRequestsListContent {storageData} />
-        </div>
-      </section>
+          </figcaption>
+            <button on:click={openOptionsPage} class="btn settings btn-secondary">
+                ⚙
+            </button>
+        </figure>
+        <section class="container clearfix">
+          <p>Lorem ipsum asks your consent for the following:</p>
+        </section>
+        <SvelteIsWeird {storageData} {openOptionsPage} {close}/>
     </ConsentRequestsLoader>
   {:else}
     <i>Unable to read this webpage’s address.</i>
   {/if}
-  <section class="container mb-2 d-flex justify-content-between">
-    <Button on:click={openOptionsPage} color="success" class="m-2">
-      ⚙️ Control centre
-    </Button>
-    <Button on:click={close} class="m-2" color="primary">
-      Confirm choices
-    </Button>
-  </section>
-
 </main>
