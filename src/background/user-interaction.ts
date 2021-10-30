@@ -1,6 +1,6 @@
-const iconNewRequests = '/icon/red-16.png';
-const iconKnownRequests = '/icon/darkred-16.png';
-const iconNoRequests = '/icon/grey-16.png';
+const iconNewRequests = '/icon/proxy.png';
+const iconKnownRequests = '/icon/proxy.png';
+const iconNoRequests = '/icon/proxy.png';
 
 // @ts-ignore
 import { remoteFunction } from 'webextension-rpc';

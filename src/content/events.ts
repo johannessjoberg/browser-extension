@@ -43,14 +43,17 @@ executePageScript(pageScriptContent);
 const requestConsent = remoteFunction('requestConsent') as (args: RequestConsentParams) => Promise<void>;
 
 interface Wtf extends UserDecisionsObject {
-  data?: Record<string, any>
+  data: Record<string, any>
 }
 
-async function getProxyData(): Promise<Record<string,any>> {
-  const response = await fetch('http://localhost:8080/v2/twins/anton/age');
+async function getData(path: string): Promise<Record<string,any>> {
+  const response = await fetch(`http://localhost:8080/v2/twins${path}`);
   const json = await response.json();
+
+  const currentData = (await browser.storage.sync.get('data:proxy'))['data:proxy']
+
   await browser.storage.sync.set({
-    'data:proxy': { proxy: json },
+    'data:proxy': { ...currentData, [json.attributeType]: json },
   });
 
   return json
@@ -60,23 +63,17 @@ export async function request(consentRequestsList: ConsentRequestsList, origin?:
   validateConsentRequestsList(consentRequestsList);
 
   const webPageOrigin = origin || new URL(document.URL).origin;
-  console.log('webPageOrigin', webPageOrigin)
   await setConsentRequestsList(webPageOrigin, consentRequestsList);
 
   await requestConsent({ consentRequestsList, pageUrl: document.URL });
 
-  const userDecisions: Wtf = await getUserDecisions(webPageOrigin);
+  const userDecisions: Wtf = {
+    ...await getUserDecisions(webPageOrigin),
+    data: {}
+  };
 
-  const json = await getProxyData()
-  console.log('request json', json)
-
-  if (userDecisions?.consent?.includes('proxy:age')) {
-    userDecisions.data = {
-      'proxy:age': json,
-    }
-  }
-
-  console.log('userDecisions!!!!!', userDecisions)
+  await getData('/anton/age')
+  await getData('/anton/clown/certification')
 
   return userDecisions;
 }
@@ -96,12 +93,16 @@ listenToStorageChanges((webPageOrigin, newStorageData) => {
     userDecisions: newUserDecisions,
   };
 
+  const proxy = eventAttributes?.userDecisions?.consent?.reduce((acc: Record<string,any>, val: string) => {
+    return {
+      ...acc,
+      [val]: newStorageData[val]
+    }
+  }, {})
+
   let proxyEvent = new CustomEvent(
     proxyEventName,
-    maybeClone({ detail: {
-      ...eventAttributes,
-        ...(eventAttributes?.userDecisions?.consent?.includes('proxy:age') && { proxy: newStorageData.proxy })}
-    }),
+    maybeClone({ detail: { ...eventAttributes, proxy }}),
   );
   // if (webPageOrigin === 'proxy') {
   //   proxyEvent = new CustomEvent(
@@ -109,7 +110,5 @@ listenToStorageChanges((webPageOrigin, newStorageData) => {
   //     maybeClone({ detail: newStorageData }),
   //   );
   // }
-  console.log('before dispatch', proxyEvent)
   document.dispatchEvent(proxyEvent);
-  console.log('after dispatch')
 });

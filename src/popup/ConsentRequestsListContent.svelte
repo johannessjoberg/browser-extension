@@ -16,6 +16,9 @@
       console.log('a',a)
     }
     // console.log($storageData.consentResponses)
+    Object.keys($storageData.consentResponses).forEach((key) => {
+      $storageData.consentResponses[key] = undefined
+    })
     for (let field of formData) {
       console.log(field)
       let key: string
