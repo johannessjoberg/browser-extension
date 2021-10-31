@@ -135,7 +135,7 @@ export function listenToStorageChanges(
 export async function getAllOrigins() {
   const storageContents = await browser.storage.sync.get();
   const allOrigins = Object.keys(storageContents)
-    .filter(key => key.startsWith('data:'))
+    .filter(key => key.startsWith('data:') && !key.startsWith('data:proxy'))
     .map(key => key.slice('data:'.length));
   return allOrigins;
 }

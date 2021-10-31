@@ -59,6 +59,8 @@
     /*padding: 6px;*/
     margin-left: auto !important;
     font-size: 20px;
+    background: #fa3350;
+    color: white;
   }
 </style>
 
@@ -67,18 +69,17 @@
   {#if webPageOrigin}
     <ConsentRequestsLoader webPageOrigin={webPageOrigin} let:storageData>
         <figure class="avatar-figure border-bottom">
-          <img class="avatar-img" src="https://ca.slack-edge.com/T03D4RYLN-UBXEC6MJ6-27fdd6ac0796-512" alt="Henrik">
+          <img class="avatar-img" src="https://static.wikia.nocookie.net/doom/images/4/4e/Doomguy_godface.png/revision/latest/scale-to-width-down/72?cb=20190116151541" alt="Henrik">
           <figcaption class="avatar-figcaption">
-          <span class="avatar-span">Henrik</span>
-          <span class="avatar-span">hussfelt@proxy.com</span>
-
+          <span class="avatar-span">John Doe</span>
+          <span class="avatar-span">john.doe@proxy.com</span>
           </figcaption>
-            <button on:click={openOptionsPage} class="btn settings btn-secondary">
+            <button on:click={openOptionsPage} class="btn settings">
                 ⚙
             </button>
         </figure>
         <section class="container clearfix">
-          <p>Lorem ipsum asks your consent for the following:</p>
+          <p>LinkedInterest asks your consent for the following:</p>
         </section>
         <SvelteIsWeird {storageData} {openOptionsPage} {close}/>
     </ConsentRequestsLoader>

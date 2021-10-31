@@ -9,7 +9,7 @@ export async function showPopin() {
   const container = document.createElement('iframe');
   container.style.all = 'unset';
   container.style.boxSizing = 'content-box';
-  container.style.height = '400px';
+  container.style.height = '440px';
   container.style.width = '400px';
   container.style.maxHeight = '95vh';
   container.style.maxWidth = 'calc(100vw - 2 * 20px)';

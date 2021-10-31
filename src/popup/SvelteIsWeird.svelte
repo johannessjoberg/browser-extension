@@ -36,19 +36,25 @@
 <style>
     .save-button {
         width: 100%;
+        background: #fa3350;
+        color: white;
+    }
+
+    .save-button:hover {
+        color: black;
     }
 </style>
 
 <form on:submit|preventDefault={onSubmit}>
     <section class="container flex-grow-1 d-flex flex-column">
-        <div style="height: 200px; overflow-y: auto;" class="border-bottom flex-grow-1">
+        <div style="" class="flex-grow-1">
             <ConsentRequestsListContent {storageData} />
             <div><AcceptRejectAllButtons {storageData} classes="d-block float-end ms-2 mt-2 mb-1" /></div>
         </div>
     </section>
-    <section class="container">
-        <button type="submit" class="btn btn-primary save-button">
-            💾 Save settings
+    <section class="container mt-4">
+        <button type="submit" class="btn save-button">
+            Save settings
         </button>
     </section>
 </form>
